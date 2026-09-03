@@ -1,0 +1,14 @@
+name = "wedding1"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+
+# Melayani file statis web (HTML, gambar, audio)
+[assets]
+directory = "./"
+
+# Konfigurasi Cloudflare D1 Database Binding
+# Untuk mendapatkan database_id, jalankan perintah: npx wrangler d1 create wedding_db
+[[d1_databases]]
+binding = "DB"
+database_name = "wedding_db"
+database_id = "7a79f754-d697-47d0-a119-8777b2311498"
