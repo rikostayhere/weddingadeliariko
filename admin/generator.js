@@ -7,11 +7,11 @@ Yth. {tamu}
 Dengan memohon rahmat dan ridho Allah SWT,
 perkenankan kami mengundang Saudara untuk menghadiri acara pernikahan kami.
 
-🧕🏻 *Adelia Arifanti*
+*Adelia Arifanti*
 
 dengan
 
-🤵🏻 *Riko Oktavian*
+*Riko Oktavian*
 
 *Informasi lengkap dapat dilihat pada:*
 {link}
