@@ -11,11 +11,16 @@
 
   const DEFAULT_TEMPLATE = `_Assalamualaikum Warahmatullahi Wabarakaatuh_
 Dengan memohon rahmat dan ridho Allah SWT, perkenankan kami mengundang Saudara untuk menghadiri acara pernikahan kami :
+
+
 *Adelia Arifanti*
 dengan
 *Riko Oktavian*
+
+
 *Untuk informasi detail mengenai acara, silahkan kunjungi link dibawah ini :*
 {link}
+
 
 Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Saudara berkenan untuk hadir dan memberikan doa restu.
 Atas kehadiran dan doa restunya kami ucapkan terima kasih.
@@ -164,7 +169,7 @@ Rekan Kerja Divisi IT, 081200001111`;
       count++;
       const nomorFormatted = formatNomor(nomorRaw);
       const inviteUrl = websiteBase + "?to=" + encodeURIComponent(nama);
-      
+
       const pesanLengkap = template
         .replace(/{tamu}/g, nama)
         .replace(/{link}/g, inviteUrl);
@@ -283,10 +288,10 @@ Rekan Kerja Divisi IT, 081200001111`;
           </div>
         </td>
         <td>
-          ${item.hasPhone 
-            ? `<span class="phone-badge">${escapeHtml(item.nomorFormatted)}</span>` 
-            : `<span class="phone-empty">Tanpa No. WA</span>`
-          }
+          ${item.hasPhone
+          ? `<span class="phone-badge">${escapeHtml(item.nomorFormatted)}</span>`
+          : `<span class="phone-empty">Tanpa No. WA</span>`
+        }
         </td>
         <td>
           <div class="link-cell-wrapper">
@@ -347,10 +352,10 @@ Rekan Kerja Divisi IT, 081200001111`;
           <div class="guest-card-row">
             <span class="guest-card-label">Nomor WhatsApp</span>
             <span>
-              ${item.hasPhone 
-                ? `<span class="phone-badge">${escapeHtml(item.nomorFormatted)}</span>` 
-                : `<span class="phone-empty">Tanpa No. WA</span>`
-              }
+              ${item.hasPhone
+          ? `<span class="phone-badge">${escapeHtml(item.nomorFormatted)}</span>`
+          : `<span class="phone-empty">Tanpa No. WA</span>`
+        }
             </span>
           </div>
           <div class="guest-card-row">
@@ -513,7 +518,7 @@ Rekan Kerja Divisi IT, 081200001111`;
 
       const tsvContent = rows.join("\r\n");
       copyToClipboard(
-        tsvContent, 
+        tsvContent,
         "Format Excel disalin! Buka Microsoft Excel / Google Sheets lalu tekan Ctrl+V."
       );
     } catch (err) {
@@ -590,7 +595,7 @@ Rekan Kerja Divisi IT, 081200001111`;
 
   function handleClearInput() {
     if (!guestListInput.value.trim() && generatedData.length === 0) return;
-    
+
     if (confirm("Apakah Anda yakin ingin mengosongkan daftar tamu dan hasil generate?")) {
       guestListInput.value = "";
       generatedData = [];
