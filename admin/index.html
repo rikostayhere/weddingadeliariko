@@ -1,36 +1,255 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Generator Undangan WA</title>
-
-<link rel="stylesheet" href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Undangan WA & Export Excel - Adel & Riko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Generator Undangan WhatsApp</h1>
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-<p>Adelia Arifanti & Riko Oktavian</p>
+  <!-- Main Container -->
+  <main class="container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="wedding-badge">The Wedding of</div>
+      <h1 class="couple-title">Adelia Arifanti & Riko Oktavian</h1>
+      <h2 class="app-subtitle">Generator Undangan WhatsApp &amp; Manajemen Data Excel</h2>
+      <p class="app-description">
+        Buat pesan personal dan link WhatsApp secara otomatis untuk setiap tamu undangan. Dilengkapi fitur <strong>Export ke Excel (.xlsx)</strong> dan <strong>Salin ke Spreadsheet</strong> yang rapi dan terstruktur.
+      </p>
+    </header>
 
-<textarea
-id="guestList"
-rows="10"
-placeholder="Mas Budi&#10;Pak Ahmad&#10;Bu Siti,081234567890">
-</textarea>
+    <!-- Template Customizer (Accordion) -->
+    <section class="card config-card">
+      <details class="config-details" id="configAccordion">
+        <summary class="config-summary">
+          <span class="summary-left">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <strong>Pengaturan Template Pesan &amp; Website</strong>
+          </span>
+          <span class="summary-toggle-badge">Klik untuk Atur</span>
+        </summary>
+        
+        <div class="config-body">
+          <div class="form-group">
+            <label for="websiteUrl">URL Website Undangan:</label>
+            <input type="url" id="websiteUrl" class="input-text" value="https://weddingrikoadel.my.id/" placeholder="https://weddingrikoadel.my.id/">
+            <small class="helper-text">Parameter <code>?to=Nama+Tamu</code> akan ditambahkan otomatis di belakang URL ini.</small>
+          </div>
 
-<br>
+          <div class="form-group">
+            <label for="templateText">Template Pesan WhatsApp:</label>
+            <textarea id="templateText" class="input-textarea input-template" rows="8"></textarea>
+            <div class="template-variables-tag">
+              <span>Gunakan variabel: <code>{tamu}</code> untuk Nama Tamu dan <code>{link}</code> untuk Link Undangan</span>
+              <button type="button" id="resetTemplateBtn" class="btn btn-sm btn-ghost">Reset ke Template Asli</button>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
 
-<button id="generateBtn">
-Generate
-</button>
+    <!-- Guest Input Section -->
+    <section class="card input-card">
+      <div class="card-header-row">
+        <div>
+          <h3 class="card-title">Daftar Tamu Undangan</h3>
+          <p class="card-desc">
+            Ketik atau <strong>Copy-Paste langsung dari Excel / Google Sheets</strong>. Format per baris: <code>Nama Tamu, Nomor WA</code> atau <code>Nama [TAB] Nomor</code>.
+          </p>
+        </div>
+        <div class="card-header-actions">
+          <button type="button" id="sampleDataBtn" class="btn btn-outline btn-sm">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Isi Contoh Data
+          </button>
+          <button type="button" id="clearBtn" class="btn btn-outline btn-sm btn-danger-outline">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Hapus Semua
+          </button>
+        </div>
+      </div>
 
-<div id="result"></div>
+      <div class="textarea-wrapper">
+        <textarea
+          id="guestList"
+          class="input-textarea input-guestlist"
+          rows="8"
+          placeholder="Contoh format:&#10;Mas Budi, 081234567890&#10;Pak Ahmad, 085712345678&#10;Keluarga Besar Bpk Joko, 08987654321&#10;Bu Siti (bisa tanpa nomor HP)"></textarea>
+      </div>
 
-<script src="generator.js"></script>
+      <div class="input-actions-row">
+        <button id="generateBtn" class="btn btn-primary btn-lg">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Generate Data Undangan
+        </button>
+      </div>
+    </section>
+
+    <!-- Results Section (Stats & Export Tools & Table) -->
+    <section id="resultsSection" class="results-section hidden">
+      
+      <!-- Statistics Row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon-wrapper stat-total">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <div class="stat-value" id="statTotalGuests">0</div>
+            <div class="stat-label">Total Tamu</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper stat-ready">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="stat-value" id="statWithPhone">0</div>
+            <div class="stat-label">Siap Kirim WhatsApp</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper stat-links">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </div>
+          <div>
+            <div class="stat-value" id="statNoPhone">0</div>
+            <div class="stat-label">Hanya Link Undangan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export & Action Toolbar -->
+      <div class="card toolbar-card">
+        <div class="toolbar-header">
+          <div>
+            <h3 class="toolbar-title">Ekspor &amp; Manajemen Data</h3>
+            <p class="toolbar-desc">Pilih format ekspor ke Excel untuk backup, pelacakan kirim, atau copy-paste langsung.</p>
+          </div>
+          <div class="export-btn-group">
+            <button type="button" id="exportExcelBtn" class="btn btn-excel">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13l3 4M11 13l-3 4"/><path d="M15 13v4h2"/></svg>
+              <strong>Export ke Excel (.xlsx)</strong>
+            </button>
+            <button type="button" id="copySpreadsheetBtn" class="btn btn-secondary">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Salin Format Excel (TSV)
+            </button>
+            <button type="button" id="exportCsvBtn" class="btn btn-outline btn-sm">
+              Unduh CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="toolbar-filter-row">
+          <div class="search-box">
+            <svg class="icon-sm search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari nama tamu atau nomor WhatsApp...">
+            <button type="button" id="clearSearchBtn" class="clear-search-btn hidden">&times;</button>
+          </div>
+
+          <div class="filter-controls">
+            <select id="filterType" class="filter-select">
+              <option value="all">Semua Tamu</option>
+              <option value="with_phone">Hanya yang ada No. WA</option>
+              <option value="no_phone">Hanya tanpa No. WA</option>
+            </select>
+
+            <div class="view-toggle">
+              <button type="button" id="viewTableBtn" class="toggle-btn active" title="Tampilan Tabel">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+                Tabel
+              </button>
+              <button type="button" id="viewCardBtn" class="toggle-btn" title="Tampilan Kartu">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Kartu
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table View Container -->
+      <div id="tableViewContainer" class="card table-card">
+        <div class="table-responsive">
+          <table class="data-table" id="guestsTable">
+            <thead>
+              <tr>
+                <th style="width: 45px;">#</th>
+                <th style="width: 200px;">Nama Tamu</th>
+                <th style="width: 140px;">Nomor WA</th>
+                <th>Link Undangan Web</th>
+                <th style="width: 120px;">Preview Pesan</th>
+                <th style="width: 230px;">Aksi WhatsApp</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+        <div id="emptyTableMessage" class="empty-state hidden">
+          Tidak ada tamu yang cocok dengan pencarian Anda.
+        </div>
+      </div>
+
+      <!-- Card View Container (Toggleable) -->
+      <div id="cardViewContainer" class="card-grid hidden">
+        <!-- Dynamically rendered -->
+      </div>
+
+    </section>
+
+    <!-- Message Preview Modal -->
+    <div id="messageModal" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalGuestName">Preview Pesan WhatsApp</h4>
+          <button type="button" class="modal-close" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-subtitle">Teks pesan yang akan dikirim via WhatsApp:</p>
+          <pre id="modalMessageText" class="modal-message-preview"></pre>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="copyModalMessageBtn">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Salin Teks Pesan
+          </button>
+          <a href="#" target="_blank" id="modalOpenWaBtn" class="btn btn-primary">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Buka WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; The Wedding of Adelia Arifanti &amp; Riko Oktavian &bull; Generator Undangan WhatsApp &amp; Export Excel</p>
+    </footer>
+
+  </main>
+
+  <!-- SheetJS Library (Supports both local and CDN fallback) -->
+  <script src="xlsx.full.min.js"></script>
+  <script>
+    if (typeof XLSX === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');
+    }
+  </script>
+  <script src="generator.js"></script>
 
 </body>
 </html>
